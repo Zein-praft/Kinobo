@@ -113,3 +113,57 @@ export async function getProductsByCategorySlug(
 ): Promise<PaginatedProducts> {
   return getProducts({ ...options, categorySlug });
 }
+
+/**
+ * Mengambil semua produk (aktif & non-aktif) beserta rincian varian & media untuk halaman admin.
+ */
+export async function getAllProductsForAdmin(): Promise<ProductWithDetails[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(*),
+      variants:product_variants(*),
+      media:product_media(*)
+    `
+    )
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Gagal mengambil daftar produk admin: ${error.message}`);
+  }
+
+  return (data ?? []) as ProductWithDetails[];
+}
+
+/**
+ * Mengambil satu produk berdasarkan ID beserta varian & media untuk form edit admin.
+ */
+export async function getProductByIdForAdmin(
+  id: string
+): Promise<ProductWithDetails | null> {
+  const supabase = await createClient();
+
+  const { data: product, error } = await supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(*),
+      variants:product_variants(*),
+      media:product_media(*)
+    `
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw new Error(`Gagal mengambil produk admin: ${error.message}`);
+  }
+
+  return product as ProductWithDetails;
+}
