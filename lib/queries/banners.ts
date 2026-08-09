@@ -20,3 +20,21 @@ export async function getActiveBanners(): Promise<SiteBanner[]> {
 
   return data ?? [];
 }
+
+/**
+ * Mengambil seluruh banner (aktif & non-aktif) untuk halaman manajemen admin.
+ */
+export async function getAllBannersForAdmin(): Promise<SiteBanner[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("site_banners")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    throw new Error(`Gagal mengambil banner admin: ${error.message}`);
+  }
+
+  return data ?? [];
+}

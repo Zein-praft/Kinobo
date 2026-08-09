@@ -31,7 +31,16 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Refresh session — jangan letakkan kode sensitif di antara createServerClient dan getUser
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Defense in depth: redirect request tanpa session di /admin/* langsung ke /login
+  if (request.nextUrl.pathname.startsWith("/admin") && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

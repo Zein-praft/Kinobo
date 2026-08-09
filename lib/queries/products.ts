@@ -2,7 +2,7 @@
  * Query functions untuk produk — dijalankan via Server Component / Server Action.
  */
 import { createClient } from "@/lib/supabase/server";
-import type { Product, ProductWithDetails } from "@/lib/types/database.types";
+import type { Product, ProductWithDetails, ProductMedia } from "@/lib/types/database.types";
 
 export interface GetProductsOptions {
   categorySlug?: string;
@@ -10,8 +10,10 @@ export interface GetProductsOptions {
   limit?: number;
 }
 
+export type ProductWithMedia = Product & { media: ProductMedia[] };
+
 export interface PaginatedProducts {
-  products: Product[];
+  products: ProductWithMedia[];
   total: number;
   page: number;
   limit: number;
@@ -43,7 +45,7 @@ export async function getProducts(
 
   let query = supabase
     .from("products")
-    .select("*", { count: "exact" })
+    .select("*, media:product_media(*)", { count: "exact" })
     .eq("is_active", true)
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -60,8 +62,16 @@ export async function getProducts(
 
   const total = count ?? 0;
 
+  // Urutkan media berdasarkan sort_order
+  const productsWithSortedMedia = (data ?? []).map((p: any) => {
+    if (p.media) {
+      p.media.sort((a: any, b: any) => a.sort_order - b.sort_order);
+    }
+    return p as ProductWithMedia;
+  });
+
   return {
-    products: (data ?? []) as Product[],
+    products: productsWithSortedMedia,
     total,
     page,
     limit,
@@ -102,4 +112,58 @@ export async function getProductsByCategorySlug(
   options: Omit<GetProductsOptions, "categorySlug"> = {}
 ): Promise<PaginatedProducts> {
   return getProducts({ ...options, categorySlug });
+}
+
+/**
+ * Mengambil semua produk (aktif & non-aktif) beserta rincian varian & media untuk halaman admin.
+ */
+export async function getAllProductsForAdmin(): Promise<ProductWithDetails[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(*),
+      variants:product_variants(*),
+      media:product_media(*)
+    `
+    )
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Gagal mengambil daftar produk admin: ${error.message}`);
+  }
+
+  return (data ?? []) as ProductWithDetails[];
+}
+
+/**
+ * Mengambil satu produk berdasarkan ID beserta varian & media untuk form edit admin.
+ */
+export async function getProductByIdForAdmin(
+  id: string
+): Promise<ProductWithDetails | null> {
+  const supabase = await createClient();
+
+  const { data: product, error } = await supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(*),
+      variants:product_variants(*),
+      media:product_media(*)
+    `
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw new Error(`Gagal mengambil produk admin: ${error.message}`);
+  }
+
+  return product as ProductWithDetails;
 }
