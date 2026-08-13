@@ -24,6 +24,16 @@ interface BannerFormProps {
   onSuccess?: () => void;
 }
 
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function isDirectVideo(url: string) {
+  return /\.(mp4|webm|ogg|mov)($|\?)/i.test(url);
+}
+
 export function BannerForm({ banner, onSuccess }: BannerFormProps) {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -118,24 +128,39 @@ export function BannerForm({ banner, onSuccess }: BannerFormProps) {
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-1">Gambar Banner</label>
+          <label className="block text-sm font-medium mb-1">Media Banner (Gambar/Video)</label>
           <MediaUploader
             folder="banners"
             onUpload={({ publicUrl }) => setValue("image_url", publicUrl)}
           />
           {imageUrl && (
-            <div className="mt-2 relative rounded overflow-hidden border">
-              <img
-                src={imageUrl}
-                alt="Banner Preview"
-                className="h-32 w-full object-cover"
-              />
+            <div className="mt-2 relative rounded overflow-hidden border bg-gray-50 h-32 flex items-center justify-center">
+              {getYouTubeId(imageUrl) ? (
+                <iframe
+                  src={`https://www.youtube.com/embed/${getYouTubeId(imageUrl)}`}
+                  className="w-full h-full"
+                  allowFullScreen
+                  title="YouTube Preview"
+                />
+              ) : isDirectVideo(imageUrl) ? (
+                <video
+                  src={imageUrl}
+                  className="w-full h-full object-cover"
+                  controls
+                />
+              ) : (
+                <img
+                  src={imageUrl}
+                  alt="Banner Preview"
+                  className="h-32 w-full object-cover"
+                />
+              )}
             </div>
           )}
         </div>
 
         <Input
-          label="URL Gambar"
+          label="URL Media / Gambar / YouTube Link"
           placeholder="https://..."
           {...register("image_url")}
           error={errors.image_url?.message}

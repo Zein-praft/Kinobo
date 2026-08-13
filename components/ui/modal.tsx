@@ -28,9 +28,9 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6">
+      <div className="relative bg-white text-black rounded-lg shadow-lg max-w-lg w-full mx-4 p-6">
         <div className="flex items-center justify-between mb-4">
-          {title && <h2 className="text-lg font-semibold">{title}</h2>}
+          {title && <h2 className="text-lg font-semibold text-black">{title}</h2>}
           <Button variant="ghost" onClick={onClose} aria-label="Tutup">
             ✕
           </Button>
