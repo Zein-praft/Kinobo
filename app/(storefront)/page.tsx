@@ -5,6 +5,7 @@ import { getActiveBanners } from "@/lib/queries/banners";
 import { getProducts } from "@/lib/queries/products";
 import { BannerCarousel } from "@/components/layout/BannerCarousel";
 import { ProductCard } from "@/components/product/ProductCard";
+import Link from "next/link";
 
 export default async function HomePage() {
   const [banners, { products }] = await Promise.all([
@@ -39,67 +40,80 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* Philosophy Section */}
+      {/* Collections Section */}
       <section className="border-t border-gray-100 max-w-7xl mx-auto px-6 py-24 select-none">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center">
-          
-          {/* Left Column: Large Image */}
-          <div className="col-span-1 md:col-span-5">
-            <div className="relative aspect-[4/5] w-full bg-gray-50 overflow-hidden shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+        <div className="relative">
+          {/* 2x2 Grid with small gap */}
+          <div className="grid grid-cols-2 grid-rows-2 gap-3 overflow-hidden rounded-lg">
+            {/* Cell 1 */}
+            <Link href="/kategori/new-drops" className="group relative overflow-hidden aspect-[4/3] md:aspect-[16/10]">
+              <img
+                src="/images/products/suede_bomber.png"
+                alt="New Drops Collection"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white text-sm md:text-lg font-semibold tracking-[0.2em] drop-shadow-sm font-sans uppercase">
+                  New Drops
+                </span>
+              </div>
+            </Link>
+
+            {/* Cell 2 */}
+            <Link href="/kategori/collection" className="group relative overflow-hidden aspect-[4/3] md:aspect-[16/10]">
+              <img
+                src="/images/products/brown_zip_jacket.png"
+                alt="Signature Line"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white text-sm md:text-lg font-semibold tracking-[0.2em] drop-shadow-sm font-sans uppercase">
+                  Signature Line
+                </span>
+              </div>
+            </Link>
+
+            {/* Cell 3 */}
+            <Link href="/kategori/browse" className="group relative overflow-hidden aspect-[4/3] md:aspect-[16/10]">
               <img
                 src="/images/philosophy_left.png"
-                alt="Our philosophy main concept"
-                className="w-full h-full object-cover"
+                alt="Essentials Collection"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-            </div>
-          </div>
-
-          {/* Middle Column: Philosophy Text content */}
-          <div className="col-span-1 md:col-span-4 flex flex-col justify-center space-y-8 py-4">
-            <div>
-              <h2 className="font-serif text-4xl md:text-5xl font-medium tracking-wide text-black mb-6">
-                Our <br className="hidden md:inline" /> philosophy
-              </h2>
-              <p className="text-xs md:text-sm font-light text-gray-500 leading-relaxed max-w-sm">
-                The <span className="font-semibold text-black tracking-wider">KINOBO</span> brand is not just about clothes. It is apparel that instills confidence. It helps you fall in love with yourself and realize you are capable of anything.
-              </p>
-            </div>
-
-            {/* In-between callout section */}
-            <div className="flex items-start gap-4 py-6 border-t border-b border-gray-100">
-              <div className="w-16 h-16 md:w-20 md:h-20 shrink-0 bg-gray-50 overflow-hidden relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/philosophy_middle.png"
-                  alt="Model layout styling detail"
-                  className="w-full h-full object-cover"
-                />
+              <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white text-sm md:text-lg font-semibold tracking-[0.2em] drop-shadow-sm font-sans uppercase">
+                  Essentials
+                </span>
               </div>
-              <p className="text-[10px] md:text-xs text-gray-400 font-normal leading-relaxed">
-                In our clothes, everyone around will notice you. Most importantly—you will notice yourself and your state of mind.
-              </p>
-            </div>
+            </Link>
 
-            <div>
-              <p className="text-xs md:text-sm font-light text-gray-500 leading-relaxed max-w-sm">
-                Our pieces assist you in working with people you like, in places you enjoy. You get paid what you deserve, because you look and feel confident.
-              </p>
-            </div>
-          </div>
-
-          {/* Right Column: Medium Image */}
-          <div className="col-span-1 md:col-span-3 self-stretch flex items-center">
-            <div className="relative aspect-[3/4] md:aspect-[3/5] w-full bg-gray-50 overflow-hidden shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* Cell 4 */}
+            <Link href="/kategori/browse" className="group relative overflow-hidden aspect-[4/3] md:aspect-[16/10]">
               <img
                 src="/images/philosophy_right.png"
-                alt="Minimal model posing"
-                className="w-full h-full object-cover"
+                alt="Limited Drops"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-            </div>
+              <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white text-sm md:text-lg font-semibold tracking-[0.2em] drop-shadow-sm font-sans uppercase">
+                  Limited Drops
+                </span>
+              </div>
+            </Link>
           </div>
 
+          {/* Centered Overlay: Big "K" Logo */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none select-none">
+            <div className="w-20 h-20 md:w-32 md:h-32 bg-white text-black rounded-full flex items-center justify-center shadow-xl border border-gray-100">
+              <span className="font-serif text-5xl md:text-7xl font-bold tracking-normal leading-none mt-1">
+                K
+              </span>
+            </div>
+          </div>
         </div>
       </section>
     </div>

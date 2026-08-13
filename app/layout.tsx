@@ -2,21 +2,23 @@
  * Root layout — wrapper global untuk seluruh aplikasi Kinobo.
  */
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Dela_Gothic_One, Onest, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { LenisProvider } from "@/components/layout/LenisProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const delaGothicOne = Dela_Gothic_One({
+  variable: "--font-dela-gothic-one",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const onest = Onest({
+  variable: "--font-onest",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair-display",
   subsets: ["latin"],
 });
 
@@ -29,9 +31,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} h-full antialiased`}
+      className={`${onest.variable} ${geistMono.variable} ${delaGothicOne.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <LenisProvider>{children}</LenisProvider>
+      </body>
     </html>
   );
 }

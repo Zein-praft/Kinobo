@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const bannerFormSchema = z
   .object({
-    image_url: z.string().url("URL gambar tidak valid"),
+    image_url: z.string().url("URL media atau gambar tidak valid"),
     title: z.string().max(200).optional(),
     subtitle: z.string().max(300).optional(),
     link_url: z.string().url("URL link tidak valid").optional().or(z.literal("")),
